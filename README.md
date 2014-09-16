@@ -1,10 +1,10 @@
-# nf-pagerduty Module
+# pagerduty-netflix
 
 A node.js module for interacting with the PagerDuty REST API
 
 ## Installation
 ```
-npm install nf-pagerduty
+npm install pagerduty-netflix
 ```
 
 ## API

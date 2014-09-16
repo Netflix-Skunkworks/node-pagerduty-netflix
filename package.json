@@ -1,6 +1,6 @@
 {
-  "name": "nf-pagerduty",
-  "version": "0.0.0",
+  "name": "pagerduty-netflix",
+  "version": "0.0.1",
   "description": "An interface for the PagerDuty REST API",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Netflix-Skunkworks/nf-pagerduty.git"
+    "url": "git://github.com/Netflix-Skunkworks/node-pagerduty-netflix.git"
   },
   "keywords": [
     "pagerduty",
@@ -21,9 +21,9 @@
   "author": "Justin Reynolds <justinreynolds@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Netflix-Skunkworks/nf-pagerduty/issues"
+    "url": "https://github.com/Netflix-Skunkworks/node-pagerduty-netflix/issues"
   },
-  "homepage": "https://github.com/Netflix-Skunkworks/nf-pagerduty",
+  "homepage": "https://github.com/Netflix-Skunkworks/node-pagerduty-netflix",
   "dependencies": {
     "request": "^2.42.0",
     "underscore": "^1.7.0"
