@@ -91,7 +91,7 @@ Cache.prototype = {
   fetchUsers: function () {
     var self = this;
     this.pagerduty.getUsers(function (err, returnedUsers) {
-      setTimeout(self.fetchUsers, self.workerInterval);
+      setTimeout(self.fetchUsers.bind(self), self.workerInterval);
       if (err) {
         debug("Error refreshing PagerDuty users: %s", err);
         throw (err);
@@ -103,7 +103,7 @@ Cache.prototype = {
   fetchEscalationPolicies: function () {
     var self = this;
     this.pagerduty.getEscalationPolicies(function (err, returnedPolicies) {
-      setTimeout(self.fetchEscalationPolicies, self.workerInterval);
+      setTimeout(self.fetchEscalationPolicies.bind(self), self.workerInterval);
       if (err) {
         debug("Error refreshing PagerDuty escalation policies: %s", err);
         throw (err);
