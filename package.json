@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Netflix-Skunkworks/node-pagerduty-netflix",
   "dependencies": {
+    "debug": "^2.0.0",
     "request": "^2.42.0",
     "underscore": "^1.7.0"
   }

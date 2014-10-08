@@ -5,9 +5,9 @@
 var request = require('request');
 var _ = require('underscore');
 var querystring = require('querystring');
+var debug = require('debug')('pagerduty-netflix');
 
-var headers,
-    users;
+var headers;
 
 /**
  * params object:
@@ -18,6 +18,7 @@ var headers,
 var PagerDuty = function (options) {
   this.headers = {'Content-Type': 'application/json', 'Authorization': 'Token token=' + options.token};
   this.endpoint = "https://" + options.domain + ".pagerduty.com/api/v1";
+  this.cache = new Cache(this);
 };
 
 
@@ -75,6 +76,47 @@ PagerDuty.prototype.getEscalationPolicies = function (callback) {
 
 PagerDuty.prototype.getUsers = function (callback) {
     this.getAllPaginatedData( {contentIndex: "users", uri: "/users", params: {"include[]":["notification_rules", "contact_methods"]}, callback: callback} );
+};
+
+var Cache = function (pagerduty) {
+  this.pagerduty = pagerduty;
+};
+
+Cache.prototype = {
+  workerInterval: 60000,
+  users: {},
+  policies: {},
+  getUsers: function () { return this.users; },
+  getPolicies: function () { return this.policies; },
+  fetchUsers: function () {
+    var self = this;
+    this.pagerduty.getUsers(function (err, returnedUsers) {
+      setTimeout(self.fetchUsers, self.workerInterval);
+      if (err) {
+        debug("Error refreshing PagerDuty users: %s", err);
+        throw (err);
+      }
+      self.users = returnedUsers;
+      debug("Refreshed PagerDuty users");
+    });
+  },
+  fetchEscalationPolicies: function () {
+    var self = this;
+    this.pagerduty.getEscalationPolicies(function (err, returnedPolicies) {
+      setTimeout(self.fetchEscalationPolicies, self.workerInterval);
+      if (err) {
+        debug("Error refreshing PagerDuty escalation policies: %s", err);
+        throw (err);
+      }
+      self.policies = returnedPolicies;
+      debug("Refreshed PagerDuty escalation policies");
+    });
+  },
+  start: function (workerInterval) {
+    this.workerInterval = workerInterval || this.workerInterval;
+    this.fetchUsers();
+    this.fetchEscalationPolicies();
+  }
 };
 
 module.exports = PagerDuty;
