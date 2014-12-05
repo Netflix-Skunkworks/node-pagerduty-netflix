@@ -37,6 +37,17 @@ PagerDuty.prototype.getAllPaginatedData = function (options) {
       };
 
   var pagedCallback = function (error, content) {
+    if (error) {
+      debug("Issues with pagedCallback: " + error);
+      return options.callback(error);
+    }
+
+    if (!content || !content.hasOwnProperty(options.contentIndex)) {
+      error = "Page does not have valid data: " + content;
+      debug(error);
+      return options.call(error);
+    }
+
     items = items.concat(content[options.contentIndex]);
 
     options.params.offset = content.offset + content.limit; // Update the offset for the next paging request
@@ -48,7 +59,7 @@ PagerDuty.prototype.getAllPaginatedData = function (options) {
     });
 
     if (options.params.offset >= total) {
-      options.callback(error, items_map);
+      return options.callback(error, items_map);
     } else {
       requestAnotherPage();
     }
