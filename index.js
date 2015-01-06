@@ -82,11 +82,11 @@ PagerDuty.prototype.getAllPaginatedData = function (options) {
 };
 
 PagerDuty.prototype.getEscalationPolicies = function (callback) {
-    this.getAllPaginatedData( {contentIndex: "escalation_policies", uri: "/escalation_policies/on_call", callback: callback} );
+  this.getAllPaginatedData( {contentIndex: "escalation_policies", uri: "/escalation_policies/on_call", callback: callback} );
 };
 
 PagerDuty.prototype.getUsers = function (callback) {
-    this.getAllPaginatedData( {contentIndex: "users", uri: "/users", params: {"include[]":["notification_rules", "contact_methods"]}, callback: callback} );
+  this.getAllPaginatedData( {contentIndex: "users", uri: "/users", params: {"include[]":["notification_rules", "contact_methods"]}, callback: callback} );
 };
 
 var Cache = function (pagerduty) {
