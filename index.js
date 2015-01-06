@@ -89,6 +89,9 @@ PagerDuty.prototype.getUsers = function (callback) {
   this.getAllPaginatedData( {contentIndex: "users", uri: "/users", params: {"include[]":["notification_rules", "contact_methods"]}, callback: callback} );
 };
 
+PagerDuty.prototype.getSchedules = function (callback) {
+  this.getAllPaginatedData( {contentIndex: "schedules", uri: "/schedules", callback: callback} );
+}
 var Cache = function (pagerduty) {
   this.pagerduty = pagerduty;
 };
@@ -97,8 +100,10 @@ Cache.prototype = {
   workerInterval: 60000,
   users: {},
   policies: {},
+  schedules: {},
   getUsers: function () { return this.users; },
   getPolicies: function () { return this.policies; },
+  getSchedules: function () { return this.schedules; },
   fetchUsers: function () {
     var self = this;
     this.pagerduty.getUsers(function (err, returnedUsers) {
@@ -123,10 +128,23 @@ Cache.prototype = {
       debug("Refreshed PagerDuty escalation policies");
     });
   },
+  fetchSchedules: function () {
+    var self = this;
+    this.pagerduty.getSchedules(function (err, returnedSchedules) {
+      setTimeout(self.fetchSchedules.bind(self), self.workerInterval);
+      if (err) {
+        debug("Error refreshing PagerDuty schedules: %s", err);
+        throw(err);
+      }
+      self.schedules = returnedSchedules;
+      debug("Refreshed PagerDuty schedules");
+    })
+  },
   start: function (workerInterval) {
     this.workerInterval = workerInterval || this.workerInterval;
     this.fetchUsers();
     this.fetchEscalationPolicies();
+    this.fetchSchedules();
   }
 };
 
