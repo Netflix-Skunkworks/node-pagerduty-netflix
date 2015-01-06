@@ -1,6 +1,6 @@
 {
   "name": "pagerduty-netflix",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "An interface for the PagerDuty REST API",
   "main": "index.js",
   "scripts": {
