@@ -43,9 +43,9 @@ PagerDuty.prototype.getAllPaginatedData = function (options) {
     }
 
     if (!content || !content.hasOwnProperty(options.contentIndex)) {
-      error = "Page does not have valid data: " + content;
+      error = "Page does not have valid data: " + JSON.stringify(content);
       debug(error);
-      return options.call(error);
+      return options.callback(new Error(error));
     }
 
     items = items.concat(content[options.contentIndex]);
@@ -91,7 +91,8 @@ PagerDuty.prototype.getUsers = function (callback) {
 
 PagerDuty.prototype.getSchedules = function (callback) {
   this.getAllPaginatedData( {contentIndex: "schedules", uri: "/schedules", callback: callback} );
-}
+};
+
 var Cache = function (pagerduty) {
   this.pagerduty = pagerduty;
 };
@@ -109,7 +110,7 @@ Cache.prototype = {
     this.pagerduty.getUsers(function (err, returnedUsers) {
       setTimeout(self.fetchUsers.bind(self), self.workerInterval);
       if (err) {
-        debug("Error refreshing PagerDuty users: %s", err);
+        debug("Error refreshing PagerDuty users: %s", err.message);
         throw (err);
       }
       self.users = returnedUsers;
@@ -121,7 +122,7 @@ Cache.prototype = {
     this.pagerduty.getEscalationPolicies(function (err, returnedPolicies) {
       setTimeout(self.fetchEscalationPolicies.bind(self), self.workerInterval);
       if (err) {
-        debug("Error refreshing PagerDuty escalation policies: %s", err);
+        debug("Error refreshing PagerDuty escalation policies: %s", err.message);
         throw (err);
       }
       self.policies = returnedPolicies;
@@ -133,7 +134,7 @@ Cache.prototype = {
     this.pagerduty.getSchedules(function (err, returnedSchedules) {
       setTimeout(self.fetchSchedules.bind(self), self.workerInterval);
       if (err) {
-        debug("Error refreshing PagerDuty schedules: %s", err);
+        debug("Error refreshing PagerDuty schedules: %s", err.message);
         throw(err);
       }
       self.schedules = returnedSchedules;
