@@ -48,7 +48,9 @@ PagerDuty.prototype.getAllPaginatedData = function (options) {
       return options.callback(new Error(error));
     }
 
-    items = items.concat(content[options.contentIndex]);
+    if (content[options.contentIndex].length > 0) {
+      items = items.concat(content[options.contentIndex]);
+    }
 
     options.params.offset = content.offset + content.limit; // Update the offset for the next paging request
     total = content.total;
