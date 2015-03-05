@@ -42,7 +42,7 @@ PagerDuty.prototype.getAllPaginatedData = function (options) {
       return options.callback(error);
     }
 
-    if (!content || !content.hasOwnProperty(options.contentIndex)) {
+    if (!content || !content[options.contentIndex]) {
       error = "Page does not have valid data: " + JSON.stringify(content);
       debug(error);
       return options.callback(new Error(error));
@@ -113,7 +113,6 @@ Cache.prototype = {
       setTimeout(self.fetchUsers.bind(self), self.workerInterval);
       if (err) {
         debug("Error refreshing PagerDuty users: %s", err.message);
-        throw (err);
       }
       self.users = returnedUsers;
       debug("Refreshed PagerDuty users");
@@ -125,7 +124,6 @@ Cache.prototype = {
       setTimeout(self.fetchEscalationPolicies.bind(self), self.workerInterval);
       if (err) {
         debug("Error refreshing PagerDuty escalation policies: %s", err.message);
-        throw (err);
       }
       self.policies = returnedPolicies;
       debug("Refreshed PagerDuty escalation policies");
